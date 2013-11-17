@@ -2,6 +2,9 @@ package com.rrd.generics;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -33,6 +36,12 @@ public class ResolverTest {
 	}
 	
 	@Test
+	public void testMethodSet(){
+		doWithString((String)genericReturnType());
+		assertEquals(String.class,rType);
+	}
+	
+	@Test
 	public void testPrimitiveIntegerType(){
 		int i = genericReturnType();
 		assertEquals(Integer.class,rType);
@@ -50,14 +59,25 @@ public class ResolverTest {
 	}
 
 	@Test
+	public void testCollections(){
+		Map<String,List<Long>> complexType = genericReturnType();
+		//complexType.get("fa").add(1l);
+		assertEquals(Map.class,rType);
+	}
+	
+	@Test
 	public void testNullType(){
 		genericReturnType();
 		assertEquals(Object.class,rType);
 	}
 	
+	public void doWithString(String str){
+		
+	}
+	
 	@SuppressWarnings("unchecked")
 	public <T> T genericReturnType(){
-		rType = Resolver.getConcreteReturnType();
+		rType = Resolver.getConcreteReturnType().getType();
 		if(Integer.class == rType){
 			return (T)new Integer(1);
 		}
