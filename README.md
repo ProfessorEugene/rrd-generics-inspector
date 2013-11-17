@@ -22,6 +22,7 @@ This library provides an alternative:
 	
 	public <T> T deserialize(String str){
 		Class<?> myReturnType = Resolver.getConcreteReturnType().getType();
+		...
 	}
 	
 
