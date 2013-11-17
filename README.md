@@ -7,10 +7,7 @@ Overview
 ========
 Consider the following method:
 	
-	public <T> T deserialize(String str){
-
-		}
-	}
+	public <T> T deserialize(String str){...}
 	
 The method's return type changes depending on the caller.  For example, when called using `Book book = deserialize("..")` , 
 it is expected to return `Book`.  When called using `Author author = deserialize("..")`, it is expected to return `Author`.
@@ -18,9 +15,7 @@ it is expected to return `Book`.  When called using `Author author = deserialize
 Java APIs utilizing generic return types typically require hints via method parameters to resolve the expected return type.
 For example:
 
-	public <T> T deserialize(String str,Class<T> type){
-
-	}
+	public <T> T deserialize(String str,Class<T> type){...}
 
 
 This library provides an alternative:
