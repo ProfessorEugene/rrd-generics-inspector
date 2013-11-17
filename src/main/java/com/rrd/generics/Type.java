@@ -37,6 +37,14 @@ public class Type {
 	public List<Type> getGenericTypes(){
 		return genericTypes;
 	}
+	/**
+	 * Get the generic type at supplied index
+	 * @param index index of type
+	 * @return generic type at supplied index
+	 */
+	public Type getGenericType(int index){
+		return getGenericTypes().get(index);
+	}
 	
 	@Override
 	public String toString() {

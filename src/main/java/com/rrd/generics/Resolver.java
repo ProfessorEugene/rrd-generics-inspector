@@ -10,12 +10,24 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 /**
- * Generic resolution utilities.
+ * Generic resolution utility class.  Can be used to resolve generic return types to concrete types at runtime.
+ * For example:
+ * {@code
+ * 	Book book = deserialize("..");
+ *  ..
+ *  <T> T deserialize(String str){
+ *  	Class<?> myReturnType = Resolver.getConcreteReturnType().getType();
+ *  	//The above will return "Book"
+ *  }
+ * }
  * 
- * Can be used to resolve generic return types
+ * This utility depends on Labels with line numbers being compiled into any calling bytecode (this is default
+ * behavior)
  * 
  * @see #getConcreteReturnType()
+ * @see Type
  * @author erachitskiy
  *
  */
@@ -30,33 +42,45 @@ public class Resolver {
 	 * 	Book book = deSerialize("...");
 	 *  ...
 	 *  <T> T deSerialize(String str){
-	 *  	Class<?> myReturnType = Resolver.getConcreteReturnType();
+	 *  	Class<?> myReturnType = Resolver.getConcreteReturnType().getType();
 	 *  	//The above will return "Book"
 	 *  }
 	 * }
 	 * 		
 	 * If no return type can be determined from the call stack, {@code java.lang.Object} is returned.
+	 * 
+	 * When available, the returned type contains generic information.
+	 * 
 	 * @return concrete return type of current method
 	 */
+	/* TODO: add caching */
 	public static com.rrd.generics.Type getConcreteReturnType(){
 		/* find the caller */
 		StackTraceElement[] stackTrace = new Throwable().getStackTrace();
-		log.debug("Attempting to resolve return type for {}#{}",stackTrace[1].getClassName(),stackTrace[1].getMethodName());
-		final StackTraceElement caller = stackTrace[2];
-		log.debug("Detected calling method of {}#{}",caller.getClassName(),caller.getMethodName());
-		com.rrd.generics.Type concreteReturnType = null;
-		int i = 2;
+		log.debug("Attempting to resolve return type for {}#{}",stackTrace[1].getClassName(),stackTrace[1].getMethodName());		
+		com.rrd.generics.Type concreteReturnType = null;int i = 2;
 		while(concreteReturnType == null && i<stackTrace.length){
 			concreteReturnType = getConcreteReturnType(stackTrace[i++]);			
 		}
 		if(concreteReturnType==null){
+			log.debug("Could not resolve concrete return type using CHECKCAST");
 			concreteReturnType = new com.rrd.generics.Type(Object.class,null);
 		}				
 		log.debug("Resolved concrete return type of {}",concreteReturnType);
 		return concreteReturnType;		
 	}
+	
+	/**
+	 * Use ASM to inspect a stack element, looking for a CHECKCAST operation within the scope of a line label
+	 * pertaining to the stack element.  If one is found, the appropriate Type element is returned.  
+	 * 
+	 * On top of looking for CHECKCAST operations, this method attempts to resolve generic signature information
+	 * by looking through local variables that might be assigned the concrete type.
+	 * @param caller stack element
+	 * @return {@code Type} or {@code null}
+	 */
 	private static com.rrd.generics.Type getConcreteReturnType(final StackTraceElement caller){
-		log.debug("Inspecting {}#{}:{}",caller.getClassName(),caller.getMethodName(),caller.getLineNumber());
+		log.debug("Starting inspection of {}#{}:{}",caller.getClassName(),caller.getMethodName(),caller.getLineNumber());
 		ClassReader cr;
 		try {
 			cr = new ClassReader(caller.getClassName());
@@ -70,7 +94,7 @@ public class Resolver {
 			public MethodVisitor visitMethod(int access, String name,
 					String desc, String signature, String[] exceptions) {				
 				if(caller.getMethodName().equals(name)){	
-					log.debug("Found {}#{}",caller.getClassName(),caller.getMethodName());
+					log.debug("Inspecting {}#{}",caller.getClassName(),caller.getMethodName());
 					return new MethodVisitor(Opcodes.ASM4) {
 						boolean onLine = false;
 						Label firstLabelAfterLine = null;
@@ -106,6 +130,7 @@ public class Resolver {
 						public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
 							/* compute generic type information from local variables if possible */							
 							if(start == firstLabelAfterLine&&returnTypeInternalSig.get()==null){
+								log.debug("Using {} as the generic signature for return type",signature);
 								returnTypeInternalSig.set(signature);
 							}
 						};
@@ -119,7 +144,7 @@ public class Resolver {
 		if(className!=null){
 			return TypeFactory.buildType(className, returnTypeInternalSig.get());			
 		}
-		log.debug("Could not find appropriate CHECKCAST operation");
+		log.debug("Could not find appropriate CHECKCAST operation in {}#{}",caller.getClassName(),caller.getMethodName());
 		return null;
 	}
 	

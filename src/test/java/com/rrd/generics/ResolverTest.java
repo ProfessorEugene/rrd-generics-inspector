@@ -10,7 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 @SuppressWarnings("unused")
 public class ResolverTest {	
-	Class<?> rType = null;
+	Type rType = null;
 	
 	@BeforeClass
 	public static void setUpLogger(){
@@ -26,25 +26,25 @@ public class ResolverTest {
 	@Test
 	public void testStringType(){
 		Long prefix=2l;String s = genericReturnType();Integer other = 12;
-		assertEquals(String.class,rType);
+		assertEquals(String.class,rType.getType());
 	}
 	
 	@Test
 	public void testObjectType(){
 		Object s = genericReturnType();
-		assertEquals(Object.class,rType);
+		assertEquals(Object.class,rType.getType());
 	}
 	
 	@Test
 	public void testMethodSet(){
 		doWithString((String)genericReturnType());
-		assertEquals(String.class,rType);
+		assertEquals(String.class,rType.getType());
 	}
 	
 	@Test
 	public void testPrimitiveIntegerType(){
-		int i = genericReturnType();
-		assertEquals(Integer.class,rType);
+		Integer i = genericReturnType();
+		assertEquals(Integer.class,rType.getType());
 	}
 	
 	@Test
@@ -55,32 +55,43 @@ public class ResolverTest {
 			}
 		}
 		Long l = new LocalClass().localGenericReturnType();
-		assertEquals(Long.class,rType);
+		assertEquals(Long.class,rType.getType());
 	}
+	
+	@Test
+	public void testCallChainWithComplexTypes(){
+		class LocalClass{
+			public <T> T localGenericReturnType(){
+				return genericReturnType();
+			}
+		}
+		List<String> l = new LocalClass().localGenericReturnType();
+		assertEquals(List.class,rType.getType());
+		assertEquals(String.class,rType.getGenericType(0).getType());
+	}
+	
 
 	@Test
-	public void testCollections(){
+	public void testComplexTypes(){
 		Map<String,List<Long>> complexType = genericReturnType();
-		//complexType.get("fa").add(1l);
-		assertEquals(Map.class,rType);
+		assertEquals(Map.class,rType.getType());
+		assertEquals(String.class,rType.getGenericType(0).getType());
+		assertEquals(List.class,rType.getGenericTypes().get(1).getType());
+		assertEquals(Long.class,rType.getGenericType(1).getGenericType(0).getType());
 	}
 	
 	@Test
 	public void testNullType(){
 		genericReturnType();
-		assertEquals(Object.class,rType);
+		assertEquals(Object.class,rType.getType());
 	}
 	
 	public void doWithString(String str){
 		
 	}
 	
-	@SuppressWarnings("unchecked")
 	public <T> T genericReturnType(){
-		rType = Resolver.getConcreteReturnType().getType();
-		if(Integer.class == rType){
-			return (T)new Integer(1);
-		}
+		rType = Resolver.getConcreteReturnType();		
 		return null;
 	}
 }
