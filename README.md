@@ -6,30 +6,29 @@ A Java library that can be used to resolve concrete types for parametrized metho
 Overview
 ========
 Consider the following method:
-	```java
-		public <T> T deserialize(String str){
+	
+	public <T> T deserialize(String str){
 
 		}
 	}
-
-	```
+	
 The method's return type changes depending on the caller.  For example, when called using `Book book = deserialize("..")` , 
 it is expected to return `Book`.  When called using `Author author = deserialize("..")`, it is expected to return `Author`.
 
 Java APIs utilizing generic return types typically require hints via method parameters to resolve the expected return type.
 For example:
-	```java
-		public <T> T deserialize(String str,Class<T> type){
 
-		}
-	```
+	public <T> T deserialize(String str,Class<T> type){
+
+	}
+
 
 This library provides an alternative:
-	```java
-		public <T> T deserialize(String str){
-			Class<?> myReturnType = Resolver.getConcreteReturnType().getType();
-		}
-	```
+	
+	public <T> T deserialize(String str){
+		Class<?> myReturnType = Resolver.getConcreteReturnType().getType();
+	}
+	
 
 By inspecting the call stack, the library figures out what the expected return type of any method.  When invoked via
 `Book book = deserialize("..")`, `myReturnType` will be `Book`; likewise when invoked via `Author author = deserialize("..")`, 
@@ -43,26 +42,25 @@ a concrete type and a list of generic/parameterized types.  In the examples abov
 Now consier this invocation: `Map<String,List<Animal>> ark = deserialize("..")`.  In this case, `Resolver.getConcreteReturnType();`
 will return a `Type` instance that can be used to obtain generic type information:
 
-	```java
 		Type myReturnType = Resolver.getConcreteReturnType();
 		myReturnType.toString(); // returns Map<String,List<Animal>>
 		myReturnType.getType(); // returns Map.class
 		myReturnType.getGenericType(0).getType(); // returns String.class
 		myReturnType.getGenericType(1).getType(); // returns List.class
 		myReturnType.getGenericType(1).getGenericType(1); // returns Animal.class
-	```
+
 
 Limitations
 ===========
 Due to the way this library works, it will only work when the code calling a method has been compiled with line number labels in place.  
 Most Java code is indeed compiled this way so this is not a huge issue.
 
-In case no return type can be resolved - for example in the case of an invocation that doesn't process the returned reference:
-	```java
-		for(String str:strs){
-			deserialize(str); // note - nothing is done with returned reference
-		}
-	```
+In case no return type can be resolved - for example in the case of an invocation that doesn't process the returned reference:	
+
+	for(String str:strs){
+		deserialize(str); // note - nothing is done with returned reference
+	}
+	
 `Resolver.getConcreteReturnType` will simply return a representation of `java.lang.Object`
 
 How it works
@@ -72,15 +70,15 @@ For each caller, the library inspects the calling bytecode using the ASM bytecod
 calling line number as well as local variables in the calling method, the library can detect 'CHECKCAST' operations and generic signatures.
 
 Consider the following example:
-	```java
+
 	class Test{
 		void test(){
 			Set myLocalVariable = deserialize("..");		
 		}
 	}
-	```
+
 A snippet of the bytecode for this example:
-	```text 
+
   test() : void
    L0
     LINENUMBER 3 L0
@@ -97,7 +95,7 @@ A snippet of the bytecode for this example:
     LOCALVARIABLE myLocalVariable Set L1 L2 1
     MAXSTACK = 2
     MAXLOCALS = 2
-	```
+
 When looking at a call stack from the `deserialize` method, one will encounter `Test#test:3`.  The above `Test` class bytecode can then
 be inspected.
 
