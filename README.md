@@ -1,6 +1,7 @@
 RRD-Generics-Inspector [![Build Status](https://drone.io/github.com/ProfessorEugene/rrd-generics-inspector/status.png)](https://drone.io/github.com/ProfessorEugene/rrd-generics-inspector/latest)
 ======================
-A Java library that can be used to resolve concrete types for parametrized methods at runtime by inspecting the call stack. 
+A Java library that can be used to resolve concrete types for parametrized methods at runtime by inspecting the call stack.
+Read below for overview and maven dependency information. 
 
 Overview
 ========
@@ -60,6 +61,32 @@ In case a return type can not be resolved - for example in the case of an invoca
 	}
 	
 `Resolver.getConcreteReturnType` will simply return a representation of `java.lang.Object`
+
+
+Maven
+=====
+To use this library in your maven project, first add the following repository to your repositories section:
+
+	```xml
+	<repositories>
+	    <repository>
+	        <id>YOUR-PROJECT-NAME-mvn-repo</id>
+	        <url>https://raw.github.com/ProfessorEugene/rrd-generics-inspector/mvn-repo/</url>        
+	    </repository>
+	</repositories>
+	```
+
+Then add the following dependency to your dependencies section:
+
+	```xml
+	<dependencies>
+		<dependency>
+			<groupId>com.rrd.generics</groupId>
+			<artifactId>generics-resolver</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+	</dependencies>
+	```
 
 How it works
 ============
