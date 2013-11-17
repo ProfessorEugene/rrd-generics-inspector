@@ -78,22 +78,22 @@ Consider the following example:
 
 A snippet of the bytecode for this example:
 
-  test() : void
-   L0
-    LINENUMBER 3 L0
-    ALOAD 0: this
-    LDC ".."
-    INVOKEVIRTUAL Test.deserialize(String) : Object
-    CHECKCAST java/util/Set
-    ASTORE 1
-   L1
-    LINENUMBER 4 L1
-    RETURN
-   L2
-    LOCALVARIABLE this Test L0 L2 0
-    LOCALVARIABLE myLocalVariable Set L1 L2 1
-    MAXSTACK = 2
-    MAXLOCALS = 2
+		  test() : void
+		   L0
+		    LINENUMBER 3 L0
+		    ALOAD 0: this
+		    LDC ".."
+		    INVOKEVIRTUAL Test.deserialize(String) : Object
+		    CHECKCAST java/util/Set
+		    ASTORE 1
+		   L1
+		    LINENUMBER 4 L1
+		    RETURN
+		   L2
+		    LOCALVARIABLE this Test L0 L2 0
+		    LOCALVARIABLE myLocalVariable Set L1 L2 1
+		    MAXSTACK = 2
+		    MAXLOCALS = 2
 
 When looking at a call stack from the `deserialize` method, one will encounter `Test#test:3`.  The above `Test` class bytecode can then
 be inspected.
