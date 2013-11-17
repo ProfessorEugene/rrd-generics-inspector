@@ -1,4 +1,4 @@
-rrd-generics-inspector
+RRD-Generics-Inspector [![Build Status](https://drone.io/github.com/ProfessorEugene/rrd-generics-inspector/status.png)](https://drone.io/github.com/ProfessorEugene/rrd-generics-inspector/latest)
 ======================
 A Java library that can be used to resolve concrete types for parametrized methods at runtime by inspecting the call stack. 
 
