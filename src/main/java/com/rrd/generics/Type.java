@@ -1,5 +1,6 @@
 package com.rrd.generics;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -8,14 +9,18 @@ import java.util.List;
  *
  */
 public class Type {
-	private final List<Type> genericTypes;
+	private final List<Type> genericTypes = new LinkedList<Type>();
 	private final Class<?> type;
 	
-	
+	Type(Class<?> type){
+		this.type = type;
+	}		
 	
 	Type(Class<?> type, List<Type> genericTypes) {		
 		this.type = type;
-		this.genericTypes = genericTypes;
+		if(genericTypes!=null){
+			this.genericTypes.addAll(genericTypes);
+		}
 	}
 	
 	/**
@@ -31,5 +36,25 @@ public class Type {
 	 */
 	public List<Type> getGenericTypes(){
 		return genericTypes;
+	}
+	
+	@Override
+	public String toString() {
+		if(genericTypes.isEmpty()){
+			return type.getName();
+		}else{
+			StringBuilder sb = new StringBuilder(type.getName());
+			sb.append("<");
+			boolean firstGenType = true;
+			for(Type genericType:genericTypes){
+				if(!firstGenType){
+					sb.append(",");
+				}
+				sb.append(genericType.toString());
+				firstGenType = false;
+			}
+			sb.append(">");
+			return sb.toString();
+		}	
 	}
 }
