@@ -51,10 +51,10 @@ In this case, `Resolver.getConcreteReturnType();` will return a `Type` instance 
 
 Limitations
 ===========
-Due to the way this library works, it will only work when the code calling a method has been compiled with line number labels in place.  
+This library will only work when the code calling a method has been compiled with line number labels in place.  
 Most Java code is indeed compiled this way so this is not a huge issue.
 
-In case no return type can be resolved - for example in the case of an invocation that doesn't process the returned reference:	
+In case a return type can not be resolved - for example in the case of an invocation that doesn't process the returned reference:	
 
 	for(String str:strs){
 		deserialize(str); // note - nothing is done with returned reference
