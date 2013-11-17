@@ -67,18 +67,15 @@ Maven
 =====
 To use this library in your maven project, first add the following repository to your repositories section:
 
-	```xml
 	<repositories>
 	    <repository>
-	        <id>YOUR-PROJECT-NAME-mvn-repo</id>
+	        <id>rrd-generics-inspector-mvn-repo</id>
 	        <url>https://raw.github.com/ProfessorEugene/rrd-generics-inspector/mvn-repo/</url>        
 	    </repository>
 	</repositories>
-	```
 
 Then add the following dependency to your dependencies section:
 
-	```xml
 	<dependencies>
 		<dependency>
 			<groupId>com.rrd.generics</groupId>
@@ -86,7 +83,6 @@ Then add the following dependency to your dependencies section:
 			<version>1.0.0</version>
 		</dependency>
 	</dependencies>
-	```
 
 How it works
 ============
