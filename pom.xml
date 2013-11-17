@@ -4,9 +4,13 @@
 	<groupId>com.rrd.generics</groupId>
 	<artifactId>generics-resolver</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<scm>
+		<connection>scm:git:https://github.com/ProfessorEugene/rrd-generics-inspector.git</connection>
+	</scm>
 	<properties>
 		<slf4j.version>1.7.5</slf4j.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -24,11 +28,17 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm</artifactId>
 			<version>4.2</version>
 		</dependency>
 	</dependencies>
+	<distributionManagement>
+		<repository>
+			<id>rrd-generics-inspector</id>
+			<url>file:///tmp/rrd-generics-inspector</url>
+		</repository>
+	</distributionManagement>
 </project>
