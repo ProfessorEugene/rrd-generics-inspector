@@ -35,8 +35,11 @@ Generic Types
 This library uses `com.rrd.generics.Type` to represent all Types.  This class attempts to model generics by containing
 a concrete type and a list of generic/parameterized types.  In the examples above, `Book` and `Author` are not parameterized.
 
-Now consier this invocation: `Map<String,List<Animal>> ark = deserialize("..")`.  In this case, `Resolver.getConcreteReturnType();`
-will return a `Type` instance that can be used to obtain generic type information:
+Now consier this invocation: 
+
+	Map<String,List<Animal>> ark = deserialize("..")
+
+In this case, `Resolver.getConcreteReturnType();` will return a `Type` instance that can be used to obtain generic type information:
 
 		Type myReturnType = Resolver.getConcreteReturnType();
 		myReturnType.toString(); // returns Map<String,List<Animal>>
