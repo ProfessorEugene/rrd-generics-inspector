@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.rrd.generics</groupId>
 	<artifactId>generics-resolver</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<scm>
 		<connection>scm:git:https://github.com/ProfessorEugene/rrd-generics-inspector.git</connection>
 	</scm>
