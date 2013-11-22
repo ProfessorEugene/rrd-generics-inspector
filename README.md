@@ -26,7 +26,7 @@ This library provides an alternative:
 	}
 	
 
-By inspecting the call stack, the library figures out what the expected return type of any method.  When invoked via
+By inspecting the call stack, the library figures out the expected return type of any method.  When invoked via
 `Book book = deserialize("..")`, `myReturnType` will be `Book`; likewise when invoked via `Author author = deserialize("..")`, 
 `myReuturnType` will be `Author`.
 
