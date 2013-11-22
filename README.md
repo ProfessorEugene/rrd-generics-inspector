@@ -46,7 +46,7 @@ In this case, `Resolver.getConcreteReturnType();` will return a `Type` instance 
 		myReturnType.getType(); // returns Map.class
 		myReturnType.getGenericType(0).getType(); // returns String.class
 		myReturnType.getGenericType(1).getType(); // returns List.class
-		myReturnType.getGenericType(1).getGenericType(1); // returns Animal.class
+		myReturnType.getGenericType(1).getGenericType(0); // returns Animal.class
 
 
 Limitations
